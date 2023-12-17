@@ -2,16 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Web;
 
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class LoginController extends AbstractController
 {
-    #[Route('/login', name: 'app_login')]
+    #[Route('/login', name: 'app_web_login')]
     public function index(AuthenticationUtils $authenticationUtils): Response
     {
         // get the login error if there is one
@@ -24,5 +26,21 @@ class LoginController extends AbstractController
             'last_username' => $lastUsername,
             'error'         => $error,
         ]);
+    }
+
+    #[Route('/dashboard', name: 'app_web_dashboard')]
+    public function redirectToDashboard(
+        Security $security
+    ): Response {
+        $user = $security->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_web_login');
+        }
+
+        $key = array_search(User::ROLE_ADMIN, $user->getRoles());
+
+        return $key !== false
+            ? $this->redirectToRoute('app_web_admin_dashboard')
+            : $this->redirectToRoute('app_web_user_dashboard');
     }
 }

@@ -17,9 +17,13 @@ security:
             lazy: true
             provider: app_user_provider
             form_login:
-                # "app_login" is the name of the route created previously
-                login_path: app_login
-                check_path: app_login
+                # "app_web_login" is the name of the route created previously
+                login_path: app_web_login
+                check_path: app_web_login
+            logout:
+                path: /logout
+                target: /login
+
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
