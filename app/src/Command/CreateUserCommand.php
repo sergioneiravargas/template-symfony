@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\User;
+use App\Service\User\RegisterService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -21,9 +22,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class CreateUserCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $em,
-        private UserPasswordHasherInterface $passwordHasher,
-        private ValidatorInterface $validator,
+        private RegisterService $registerService,
     ) {
         parent::__construct();
     }
@@ -40,41 +39,19 @@ class CreateUserCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $email = $input->getArgument('email');
-        $plainPassword =  $input->getArgument('password');
-        $isAdmin = $input->getOption('admin');
-
-
-        $user = new User();
-        $user
-            ->setEmail($email)
-            ->setPlainPassword($plainPassword);
-
-        if ($isAdmin) {
-            $user->setRoles([User::ROLE_ADMIN]);
-        }
-
-        $errors = $this->validator->validate(
-            $user,
-            null,
-            [
-                User::GROUP_REGISTER,
-            ],
-        );
-        if (count($errors) > 0) {
-            $io->error((string) $errors);
+        try {
+            $user = $this->registerService->register(
+                email: $input->getArgument('email'),
+                plainPassword: $input->getArgument('password'),
+                isAdmin: $input->getOption('admin'),
+            );
+        } catch (\Exception $e) {
+            $io->error($e->getMessage());
 
             return Command::FAILURE;
         }
 
-        $password = $this->passwordHasher->hashPassword($user, $plainPassword);
-        $user->setPassword($password);
-        $user->eraseCredentials();
-
-        $this->em->persist($user);
-        $this->em->flush();
-
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $io->success('User successfully created!');
 
         return Command::SUCCESS;
     }
