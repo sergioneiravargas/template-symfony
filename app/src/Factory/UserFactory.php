@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DataFixture\Factory;
+namespace App\Factory;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -52,7 +52,7 @@ final class UserFactory extends ModelFactory
     {
         return [
             'email' => self::faker()->unique()->safeEmail(),
-            'plainPassword' => 'password',
+            'plainPassword' => self::faker()->password(8, 24),
             'roles' => [],
         ];
     }
@@ -70,5 +70,18 @@ final class UserFactory extends ModelFactory
     protected static function getClass(): string
     {
         return User::class;
+    }
+
+    public function promoteRole(string $role): self
+    {
+        $defaults = $this->getDefaults();
+
+        $roles = array_merge($defaults['roles'], [
+            $role
+        ]);
+
+        return $this->addState([
+            'roles' => $roles,
+        ]);
     }
 }
