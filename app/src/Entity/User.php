@@ -123,6 +123,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
         return $this;
     }
 
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
     public function setPlainPassword(?string $password): static
     {
         $this->plainPassword = $password;

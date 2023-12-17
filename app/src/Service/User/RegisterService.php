@@ -27,23 +27,26 @@ class RegisterService
         $user
             ->setEmail($email)
             ->setPlainPassword($plainPassword);
-
         if ($isAdmin) {
             $user->setRoles([User::ROLE_ADMIN]);
         }
 
         $errors = $this->validator->validate(
-            $user,
-            null,
-            [
+            value: $user,
+            groups: [
                 User::GROUP_REGISTER,
             ],
         );
         if (count($errors) > 0) {
-            throw new \Exception((string) $errors);
+            throw new \Exception(
+                message: (string) $errors,
+            );
         }
 
-        $password = $this->passwordHasher->hashPassword($user, $plainPassword);
+        $password = $this->passwordHasher->hashPassword(
+            user: $user,
+            plainPassword: $plainPassword,
+        );
         $user
             ->setPassword($password)
             ->eraseCredentials();
