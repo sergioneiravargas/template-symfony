@@ -10,22 +10,56 @@ use Gedmo\Loggable\Loggable;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[Gedmo\Loggable]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggable
 {
+    // SECURITY ROLES
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
+
+    // VALIDATION GROUPS
+    public const GROUP_REGISTER = 'GROUP_REGISTER';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank(
+        groups: [
+            self::GROUP_REGISTER,
+        ],
+    )]
+    #[Assert\Email(
+        groups: [
+            self::GROUP_REGISTER,
+        ],
+    )]
     private ?string $email = null;
 
     #[ORM\Column]
     private array $roles = [];
+
+    /**
+     * @var string The plain password
+     */
+    #[Assert\NotBlank(
+        groups: [
+            self::GROUP_REGISTER,
+        ],
+    )]
+    #[Assert\Length(
+        min: 8,
+        max: 24,
+        groups: [
+            self::GROUP_REGISTER,
+        ],
+    )]
+    private ?string $plainPassword = null;
 
     /**
      * @var string The hashed password
@@ -79,6 +113,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
         return $this;
     }
 
+    public function setPlainPassword(?string $password): static
+    {
+        $this->plainPassword = $password;
+
+        return $this;
+    }
+
     /**
      * @see PasswordAuthenticatedUserInterface
      */
@@ -100,6 +141,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 }
