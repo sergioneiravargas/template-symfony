@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App;
 
 use App\Service\Notification\DependencyInjection\CompilerPass as NotificationServiceCompilerPass;
