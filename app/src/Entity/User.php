@@ -46,9 +46,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
             self::GROUP_REGISTER,
         ],
     )]
+    #[Gedmo\Versioned]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Gedmo\Versioned]
     private array $roles = [];
 
     /**
@@ -72,6 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Gedmo\Versioned]
     private ?string $password = null;
 
     public function getId(): ?int
