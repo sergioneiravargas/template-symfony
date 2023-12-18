@@ -38,9 +38,7 @@ class RegisterService
             ],
         );
         if (count($errors) > 0) {
-            throw new \Exception(
-                message: (string) $errors,
-            );
+            throw new \Exception(message: (string) $errors);
         }
 
         $password = $this->passwordHasher->hashPassword(

@@ -77,7 +77,7 @@ final class UserFactory extends ModelFactory
         $defaults = $this->getDefaults();
 
         $roles = array_merge($defaults['roles'], [
-            $role
+            $role,
         ]);
 
         return $this->addState([

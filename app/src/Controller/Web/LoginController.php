@@ -24,7 +24,7 @@ class LoginController extends AbstractController
 
         return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
-            'error'         => $error,
+            'error' => $error,
         ]);
     }
 
@@ -39,7 +39,7 @@ class LoginController extends AbstractController
 
         $key = array_search(User::ROLE_ADMIN, $user->getRoles());
 
-        return $key !== false
+        return false !== $key
             ? $this->redirectToRoute('app_web_admin_dashboard')
             : $this->redirectToRoute('app_web_user_dashboard');
     }
