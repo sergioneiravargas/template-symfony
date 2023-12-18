@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Service\User\RegisterService;
+use App\Service\User\RegistrationService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -14,13 +14,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'app:user:register',
+    name: 'app:user:registration',
     description: 'Add a short description for your command',
 )]
-class UserRegisterCommand extends Command
+class UserRegistrationCommand extends Command
 {
     public function __construct(
-        private RegisterService $registerService,
+        private RegistrationService $registrationService,
     ) {
         parent::__construct();
     }
@@ -38,7 +38,7 @@ class UserRegisterCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         try {
-            $user = $this->registerService->register(
+            $this->registrationService->register(
                 email: $input->getArgument('email'),
                 plainPassword: $input->getArgument('password'),
                 isAdmin: $input->getOption('admin'),

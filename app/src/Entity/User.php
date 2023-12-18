@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[UniqueEntity(
     fields: 'email',
     groups: [
-        self::GROUP_REGISTER,
+        self::GROUP_REGISTRATION,
     ],
 )]
 #[Gedmo\Loggable]
@@ -29,7 +29,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
     public const ROLE_ADMIN = 'ROLE_ADMIN';
 
     // VALIDATION GROUPS
-    public const GROUP_REGISTER = 'GROUP_REGISTER';
+    public const GROUP_REGISTRATION = 'USER_REGISTRATION';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -39,12 +39,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\NotBlank(
         groups: [
-            self::GROUP_REGISTER,
+            self::GROUP_REGISTRATION,
         ],
     )]
     #[Assert\Email(
         groups: [
-            self::GROUP_REGISTER,
+            self::GROUP_REGISTRATION,
         ],
     )]
     #[Gedmo\Versioned]
@@ -59,14 +59,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
      */
     #[Assert\NotBlank(
         groups: [
-            self::GROUP_REGISTER,
+            self::GROUP_REGISTRATION,
         ],
     )]
     #[Assert\Length(
         min: 8,
         max: 24,
         groups: [
-            self::GROUP_REGISTER,
+            self::GROUP_REGISTRATION,
         ],
     )]
     private ?string $plainPassword = null;

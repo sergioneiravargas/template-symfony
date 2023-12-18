@@ -9,12 +9,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class RegisterService
+class RegistrationService
 {
     public function __construct(
         private EntityManagerInterface $em,
         private UserPasswordHasherInterface $passwordHasher,
         private ValidatorInterface $validator,
+        private EmailVerificationService $emailVerificationService,
     ) {
     }
 
@@ -34,7 +35,7 @@ class RegisterService
         $errors = $this->validator->validate(
             value: $user,
             groups: [
-                User::GROUP_REGISTER,
+                User::GROUP_REGISTRATION,
             ],
         );
         if (count($errors) > 0) {
@@ -65,6 +66,8 @@ class RegisterService
 
         $this->em->persist($user);
         $this->em->flush();
+
+        $this->emailVerificationService->sendNotification($user);
 
         return $user;
     }

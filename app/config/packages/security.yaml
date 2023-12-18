@@ -19,10 +19,13 @@ security:
             form_login:
                 # "app_web_login" is the name of the route created previously
                 login_path: app_web_login
+
                 check_path: app_web_login
+                enable_csrf: true
             logout:
-                path: /logout
-                target: /login
+                path: app_web_logout
+                # where to redirect after logout
+                # target: app_any_route
 
 
             # activate different ways to authenticate

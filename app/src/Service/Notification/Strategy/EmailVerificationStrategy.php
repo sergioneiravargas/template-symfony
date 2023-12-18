@@ -21,7 +21,11 @@ class EmailVerificationStrategy implements HandlerStrategyInterface
 
     public function canHandle(Request $request): bool
     {
-        return $request->type === self::REQUEST_TYPE;
+        return self::REQUEST_TYPE === $request->type
+            && isset($request->data['to'])
+            && is_string($request->data['to'])
+            && isset($request->data['verificationUrl'])
+            && is_string($request->data['verificationUrl']);
     }
 
     public function notify(Request $request): Result

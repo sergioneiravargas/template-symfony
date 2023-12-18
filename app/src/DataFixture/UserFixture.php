@@ -6,7 +6,7 @@ namespace App\DataFixture;
 
 use App\DataFixture\Factory\UserFactory;
 use App\Entity\User;
-use App\Service\User\RegisterService;
+use App\Service\User\RegistrationService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -18,7 +18,7 @@ class UserFixture extends Fixture
     public const REFERENCE_USER_2 = 'REFERENCE_USER_2';
 
     public function __construct(
-        private RegisterService $registerService,
+        private RegistrationService $registrationService,
     ) {
     }
 
