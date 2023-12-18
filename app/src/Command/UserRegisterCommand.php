@@ -14,10 +14,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'app:create:user',
+    name: 'app:user:register',
     description: 'Add a short description for your command',
 )]
-class CreateUserCommand extends Command
+class UserRegisterCommand extends Command
 {
     public function __construct(
         private RegisterService $registerService,
