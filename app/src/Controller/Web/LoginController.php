@@ -27,20 +27,4 @@ class LoginController extends AbstractController
             'error' => $error,
         ]);
     }
-
-    #[Route('/dashboard', name: 'app_web_dashboard')]
-    public function redirectToDashboard(
-        Security $security
-    ): Response {
-        $user = $security->getUser();
-        if (!$user) {
-            return $this->redirectToRoute('app_web_login');
-        }
-
-        $key = array_search(User::ROLE_ADMIN, $user->getRoles());
-
-        return false !== $key
-            ? $this->redirectToRoute('app_web_admin_dashboard')
-            : $this->redirectToRoute('app_web_user_dashboard');
-    }
 }

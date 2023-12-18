@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Web;
 
+use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -11,10 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-class AdminDashboardController extends AbstractDashboardController
+class DashboardController extends AbstractDashboardController
 {
-    #[Route('/admin-dashboard', name: 'app_web_admin_dashboard')]
-    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/dashboard', name: 'app_web_dashboard')]
+    #[IsGranted(User::ROLE_USER)]
     public function index(): Response
     {
         return parent::index();

@@ -25,6 +25,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggable
 {
     // SECURITY ROLES
+    public const ROLE_USER = 'ROLE_USER';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
 
     // VALIDATION GROUPS
@@ -111,7 +112,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = self::ROLE_USER;
 
         return array_unique($roles);
     }
