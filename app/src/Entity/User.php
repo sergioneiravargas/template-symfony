@@ -78,6 +78,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
     #[Gedmo\Versioned]
     private ?string $password = null;
 
+    #[ORM\Column]
+    #[Gedmo\Versioned]
+    private bool $enabled = true;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -158,5 +162,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
     {
         // If you store any temporary, sensitive data on the user, clear it here
         $this->plainPassword = null;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled): static
+    {
+        $this->enabled = $enabled;
+
+        return $this;
     }
 }
