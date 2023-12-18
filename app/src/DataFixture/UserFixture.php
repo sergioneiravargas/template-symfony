@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\DataFixture;
 
 use App\Entity\User;
-use App\Factory\UserFactory;
+use App\DataFixture\Factory\UserFactory;
 use App\Service\User\RegisterService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
