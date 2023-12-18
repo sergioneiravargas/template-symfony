@@ -82,6 +82,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
     #[Gedmo\Versioned]
     private bool $enabled = true;
 
+    #[ORM\Column]
+    #[Gedmo\Versioned]
+    private bool $verified = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -172,6 +176,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
     public function setEnabled(bool $enabled): static
     {
         $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->verified;
+    }
+
+    public function setVerified(bool $verified): static
+    {
+        $this->verified = $verified;
 
         return $this;
     }

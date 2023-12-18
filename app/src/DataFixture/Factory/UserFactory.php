@@ -55,6 +55,7 @@ final class UserFactory extends ModelFactory
             'plainPassword' => self::faker()->password(8, 24),
             'roles' => [],
             'enabled' => true,
+            'verified' => true,
         ];
     }
 

@@ -28,6 +28,8 @@ class UserCrudController extends AbstractCrudController
             EmailField::new('email'),
             BooleanField::new('enabled')
                 ->renderAsSwitch(false),
+            BooleanField::new('verified')
+                ->renderAsSwitch(false),
         ];
     }
 
