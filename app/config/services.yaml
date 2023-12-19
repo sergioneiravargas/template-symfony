@@ -30,12 +30,12 @@ services:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 
-    App\Service\User\EmailVerificationService:
-        arguments:
-            $routeName: '%env(USER_EMAIL_VERIFICATION_ROUTE)%'
-            $tokenTtl: '%env(USER_EMAIL_VERIFICATION_TOKEN_TTL)%'
-
     App\Service\User\TokenService:
         arguments:
             $baseUrl: '%env(APP_BASE_URL)%'
             $secret: '%env(APP_SECRET)%'
+
+    App\Service\User\EmailVerificationService:
+        arguments:
+            $routeName: '%env(USER_EMAIL_VERIFICATION_ROUTE)%'
+            $tokenTtl: '%env(USER_EMAIL_VERIFICATION_TOKEN_TTL)%'

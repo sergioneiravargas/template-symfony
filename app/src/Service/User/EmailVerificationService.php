@@ -15,6 +15,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class EmailVerificationService
 {
+    public const TASK = 'EMAIL_VERIFICATION';
+
     public function __construct(
         private EntityManagerInterface $em,
         private NotificationHandler $notificationHandler,
@@ -43,7 +45,12 @@ class EmailVerificationService
 
     public function generateVerificationUrl(User $user): string
     {
-        return $this->tokenService->generateUrl($user, $this->routeName, $this->tokenTtl);
+        return $this->tokenService->generateUrl(
+            routeName: $this->routeName,
+            task: self::TASK,
+            target: $user->getEmail(),
+            tokenTtl: $this->tokenTtl,
+        );
     }
 
     public function validateVerificationUrl(string $url): void
@@ -53,7 +60,15 @@ class EmailVerificationService
             throw new InvalidParameterException(message: 'Invalid user');
         }
 
-        $this->tokenService->validateUrl($user, $url);
+        $params = $this->tokenService->getUrlParams($url);
+        if (self::TASK !== $params->task) {
+            throw new InvalidParameterException(message: 'Invalid task');
+        }
+        if ($params->target !== $user->getEmail()) {
+            throw new InvalidParameterException(message: 'Invalid target');
+        }
+
+        $this->tokenService->validateUrlParams($params);
 
         $user->setVerified(true);
         $this->em->flush();
