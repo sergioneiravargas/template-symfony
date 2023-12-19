@@ -52,7 +52,7 @@ class EmailVerificationService
     public function generateVerificationUrl(User $user): string
     {
         $expireTimestamp = time() + $this->tokenTtl;
-        $token = self::generateToken(
+        $token = TokenFunction::generate(
             email: $user->getEmail(),
             expireTimestamp: $expireTimestamp,
             secret: $this->tokenSecret,
@@ -139,7 +139,7 @@ class EmailVerificationService
         }
 
         // Validar token
-        $isValid = self::validateToken(
+        $isValid = TokenFunction::validate(
             token: $token,
             email: $email,
             secret: $this->tokenSecret,
@@ -151,34 +151,5 @@ class EmailVerificationService
 
         $user->setVerified(true);
         $this->em->flush();
-    }
-
-    public static function generateToken(
-        string $email,
-        string $secret,
-        int $expireTimestamp,
-    ): string {
-        $password = self::createTokenPassword($email, $secret, $expireTimestamp);
-
-        return password_hash($password, PASSWORD_BCRYPT);
-    }
-
-    public static function validateToken(
-        string $token,
-        string $email,
-        string $secret,
-        int $expireTimestamp,
-    ): bool {
-        $password = self::createTokenPassword($email, $secret, $expireTimestamp);
-
-        return password_verify($password, $token);
-    }
-
-    private static function createTokenPassword(
-        string $email,
-        string $secret,
-        int $expireTimestamp,
-    ): string {
-        return $email.$secret.$expireTimestamp;
     }
 }
