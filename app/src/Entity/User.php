@@ -136,6 +136,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
         return in_array($role, $this->getRoles(), true);
     }
 
+    public static function roleLabel(string $role): string
+    {
+        return match ($role) {
+            self::ROLE_USER => 'User',
+            self::ROLE_ADMIN => 'Admin',
+            default => throw new \InvalidArgumentException(sprintf('Invalid role "%s"', $role)),
+        };
+    }
+
     public function getPlainPassword(): ?string
     {
         return $this->plainPassword;

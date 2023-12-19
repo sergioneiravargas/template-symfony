@@ -46,7 +46,7 @@ class UserCrudController extends AbstractCrudController
 
         $roles = [];
         if ($user->hasRole(User::ROLE_ADMIN)) {
-            $roles['Admin'] = User::ROLE_ADMIN;
+            $roles[User::roleLabel(User::ROLE_ADMIN)] = User::ROLE_ADMIN;
         }
 
         $roles = array_unique($roles);
