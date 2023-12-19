@@ -10,6 +10,9 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@App\Security\AuthenticationSuccessHandler'
+            Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@App\Security\AuthenticationFailureHandler'
 
     _instanceof:
         App\Service\Notification\HandlerStrategyInterface:
