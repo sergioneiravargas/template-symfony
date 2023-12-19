@@ -47,7 +47,7 @@ class EmailVerificationService
     {
         return $this->tokenService->generateUrl(
             routeName: $this->routeName,
-            task: self::TASK,
+            task: $this->getTask($user),
             target: $user->getEmail(),
             tokenTtl: $this->tokenTtl,
         );
@@ -59,9 +59,12 @@ class EmailVerificationService
         if (!$user instanceof User) {
             throw new FailedOperationException(message: 'The action could not be performed by the current user');
         }
+        if ($user->isVerified()) {
+            throw new FailedOperationException(message: 'The user is already verified');
+        }
 
         $params = $this->tokenService->getUrlParams($url);
-        if (self::TASK !== $params->task) {
+        if ($this->getTask($user) !== $params->task) {
             throw new InvalidParameterException(message: 'Invalid task');
         }
         if ($params->target !== $user->getEmail()) {
@@ -72,5 +75,10 @@ class EmailVerificationService
 
         $user->setVerified(true);
         $this->em->flush();
+    }
+
+    private function getTask(User $user): string
+    {
+        return self::TASK.'_'.$user->getVerifiedAt()?->getTimestamp();
     }
 }
