@@ -11,7 +11,6 @@ use App\Service\Notification\Strategy\EmailVerificationStrategy;
 use App\Service\User\Exception\FailedOperationException;
 use App\Service\User\Exception\InvalidParameterException;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 
 class EmailVerificationService
 {
@@ -20,7 +19,6 @@ class EmailVerificationService
     public function __construct(
         private EntityManagerInterface $em,
         private NotificationHandler $notificationHandler,
-        private Security $security,
         private TokenService $tokenService,
         private string $routeName, // Nombre de la ruta de verificación
         private int $tokenTtl, // Tiempo de vida del token
