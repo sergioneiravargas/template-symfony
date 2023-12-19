@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Entity\User;
-use App\Security\Exception\DisabledUserException;
+use App\Security\Exception\PublicException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -22,6 +22,7 @@ class FormLoginAuthenticator extends DefaultFormLoginAuthenticator
         'check_path' => 'app_web_login',
         'default_target_path' => 'app_web_dashboard',
         'enable_csrf' => true,
+        'use_forward' => false,
     ];
 
     public function __construct(
@@ -48,7 +49,7 @@ class FormLoginAuthenticator extends DefaultFormLoginAuthenticator
             throw new UnsupportedUserException('Invalid user type');
         }
         if (!$user->isEnabled()) {
-            throw new DisabledUserException();
+            throw new PublicException('User has been disabled', 403);
         }
 
         return $passport;

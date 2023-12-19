@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\EventListener;
 
+use App\Security\Exception\AbstractException;
 use App\Security\Exception\PublicException;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,10 +20,16 @@ final class SecurityExceptionListener
     public function onKernelException(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
-        if (!$exception instanceof PublicException) {
+        if (!$exception instanceof AbstractException) {
             return;
         }
-        $response = new Response($exception->getMessage(), $exception->getCode());
+
+        $message = $exception instanceof PublicException
+            ? $exception->getMessage()
+            : 'An error occurred';
+        $code = $exception->getCode();
+
+        $response = new Response($message, $code);
         $event->setResponse($response);
     }
 }
