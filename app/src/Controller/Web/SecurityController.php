@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Web;
 
+use App\Entity\User;
 use App\Service\User\EmailVerificationService;
 use App\Service\User\Exception\PublicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,8 +45,10 @@ class SecurityController extends AbstractController
         EmailVerificationService $emailVerificationService,
     ): Response {
         $url = $request->getUri();
+        $user = $this->getUser();
+
         try {
-            $emailVerificationService->validateVerificationUrl($url);
+            $emailVerificationService->validateUrl($url, $user);
             $message = 'Your email address has been successfully verified';
             $failed = false;
         } catch (PublicException $e) {
