@@ -35,8 +35,7 @@ class UserCrudController extends AbstractCrudController
             ->renderAsSwitch(false);
 
         yield BooleanField::new('verified')
-            ->renderAsSwitch(false)
-            ->setDisabled(true);
+            ->renderAsSwitch(false);
 
         // Roles
         $user = $this->getUser();
