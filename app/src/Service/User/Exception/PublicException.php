@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Service\User\Exception;
 
-class InvalidTokenException extends PublicException
+abstract class PublicException extends \Exception
 {
     public function __construct(
-        string $message = 'Invalid token',
-        int $code = 0,
-        \Throwable $previous = null,
+        string $message,
+        int $code,
+        ?\Throwable $previous,
     ) {
         parent::__construct($message, $code, $previous);
     }

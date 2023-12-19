@@ -32,7 +32,10 @@ services:
 
     App\Service\User\EmailVerificationService:
         arguments:
-            $baseUrl: '%env(EMAIL_VERIFICATION_BASE_URL)%'
-            $routeName: '%env(EMAIL_VERIFICATION_ROUTE)%'
-            $tokenSecret: '%env(EMAIL_VERIFICATION_TOKEN_SECRET)%'
-            $tokenTtl: '%env(EMAIL_VERIFICATION_TOKEN_TTL)%'
+            $routeName: '%env(USER_EMAIL_VERIFICATION_ROUTE)%'
+            $tokenTtl: '%env(USER_EMAIL_VERIFICATION_TOKEN_TTL)%'
+
+    App\Service\User\TokenService:
+        arguments:
+            $baseUrl: '%env(APP_BASE_URL)%'
+            $secret: '%env(APP_SECRET)%'

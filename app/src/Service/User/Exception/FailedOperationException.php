@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Service\User\Exception;
 
-class InvalidTokenException extends PublicException
+class FailedOperationException extends PublicException
 {
     public function __construct(
-        string $message = 'Invalid token',
+        string $message = 'Operation failed',
         int $code = 0,
         \Throwable $previous = null,
     ) {

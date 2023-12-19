@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Web;
 
 use App\Service\User\EmailVerificationService;
-use App\Service\User\Exception\InvalidParameterException;
-use App\Service\User\Exception\InvalidTokenException;
+use App\Service\User\Exception\PublicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,10 +48,7 @@ class SecurityController extends AbstractController
             $emailVerificationService->validateVerificationUrl($url);
             $message = 'Your email address has been successfully verified';
             $failed = false;
-        } catch (InvalidParameterException $e) {
-            $failed = true;
-            $message = $e->getMessage();
-        } catch (InvalidTokenException $e) {
+        } catch (PublicException $e) {
             $failed = true;
             $message = $e->getMessage();
         } catch (\Throwable $e) {

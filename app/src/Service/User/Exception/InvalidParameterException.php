@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\User\Exception;
 
-class InvalidParameterException extends \Exception
+class InvalidParameterException extends PublicException
 {
     public function __construct(
         string $message = 'Invalid parameter',
