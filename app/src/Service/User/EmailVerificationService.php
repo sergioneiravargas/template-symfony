@@ -53,9 +53,8 @@ class EmailVerificationService
         );
     }
 
-    public function validateUrl(
-        string $url,
-    ): void {
+    public function validateUrl(string $url): void
+    {
         $user = $this->security->getUser();
         if (!$user instanceof User) {
             throw new FailedOperationException(message: 'The action could not be performed by the current user');
