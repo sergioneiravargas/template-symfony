@@ -47,7 +47,7 @@ class SecurityController extends AbstractController
     ): Response {
         $url = $request->getUri();
         try {
-            $emailVerificationService->validateUrl($url);
+            $emailVerificationService->verifyEmail($url);
             $failed = false;
             $message = 'Your email address has been successfully verified';
         } catch (\Throwable $e) {
@@ -71,21 +71,6 @@ class SecurityController extends AbstractController
         PasswordRecoveryService $passwordRecoveryService,
     ): Response {
         $url = $request->getUri();
-        try {
-            $passwordRecoveryService->validateUrl($url);
-            $failed = false;
-        } catch (\Throwable $e) {
-            $failed = true;
-            $message = $e instanceof PublicException
-                ? $e->getMessage()
-                : 'An unexpected error occurred while verifying your email address';
-
-            return $this->render('security/task_result.html.twig', [
-                'title' => 'Password recovery',
-                'failed' => $failed,
-                'message' => $message,
-            ]);
-        }
 
         $form = $this->createForm(UserPasswordType::class);
         $form->handleRequest($request);
@@ -93,7 +78,7 @@ class SecurityController extends AbstractController
             $plainPassword = $form->getData()['password'];
 
             try {
-                $passwordRecoveryService->changePassword($url, $plainPassword);
+                $passwordRecoveryService->recoverPassword($url, $plainPassword);
                 $failed = false;
                 $message = 'Your password has been successfully changed';
             } catch (\Throwable $e) {

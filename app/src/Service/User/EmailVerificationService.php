@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Service\User;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Service\Notification\Handler as NotificationHandler;
 use App\Service\Notification\Request as NotificationRequest;
 use App\Service\Notification\Strategy\EmailVerificationStrategy;
 use App\Service\User\Exception\FailedOperationException;
 use App\Service\User\Exception\InvalidParameterException;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 
 class EmailVerificationService
 {
@@ -21,7 +21,7 @@ class EmailVerificationService
         private EntityManagerInterface $em,
         private NotificationHandler $notificationHandler,
         private TokenService $tokenService,
-        private Security $security,
+        private UserRepository $userRepository,
         private string $routeName, // Nombre de la ruta de verificación
         private int $tokenTtl, // Tiempo de vida del token
     ) {
@@ -53,28 +53,32 @@ class EmailVerificationService
         );
     }
 
-    public function validateUrl(string $url): void
+    public function verifyEmail(string $url): void
     {
-        $user = $this->security->getUser();
-        if (!$user instanceof User) {
-            throw new FailedOperationException(message: 'The action could not be performed by the current user');
-        }
-        if ($user->isVerified()) {
-            throw new FailedOperationException(message: 'The user is already verified');
-        }
-
         $params = $this->tokenService->getUrlParams($url);
-        if ($this->getTask($user) !== $params->task) {
-            throw new InvalidParameterException(message: 'Invalid task');
-        }
-        if ($params->target !== $user->getEmail()) {
-            throw new InvalidParameterException(message: 'Invalid target');
-        }
 
-        $this->tokenService->validateUrlParams($params);
+        $this->validateUrlParams($params);
+
+        $user = $this->userRepository->findOneBy(['email' => $params->target]);
+        if (!$user instanceof User) {
+            throw new InvalidParameterException(message: 'User not found');
+        }
 
         $user->setVerified(true);
         $this->em->flush();
+    }
+
+    private function validateUrlParams(TokenUrlParams $params): void
+    {
+        $user = $this->userRepository->findOneBy(['email' => $params->target]);
+        if (!$user instanceof User) {
+            throw new InvalidParameterException(message: 'Invalid target');
+        }
+        if ($this->getTask($user) !== $params->task) {
+            throw new InvalidParameterException(message: 'Invalid task');
+        }
+
+        $this->tokenService->validateUrlParams($params);
     }
 
     private function getTask(User $user): string

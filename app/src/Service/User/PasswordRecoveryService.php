@@ -57,30 +57,14 @@ class PasswordRecoveryService
         );
     }
 
-    public function validateUrl(string $url): void
-    {
-        $params = $this->tokenService->getUrlParams($url);
-        $user = $this->userRepository->findOneBy(['email' => $params->target]);
-        if (!$user instanceof User || $params->target !== $user->getEmail()) {
-            throw new InvalidParameterException(message: 'Invalid target');
-        }
-        if ($this->getTask($user) !== $params->task) {
-            throw new InvalidParameterException(message: 'Invalid task');
-        }
-
-        $this->tokenService->validateUrlParams($params);
-    }
-
-    private function getTask(User $user): string
-    {
-        return self::TASK.'_'.$user->getPasswordChangedAt()?->getTimestamp();
-    }
-
-    public function changePassword(
+    public function recoverPassword(
         string $url,
         string $plainPassword,
     ): void {
         $params = $this->tokenService->getUrlParams($url);
+
+        $this->validateUrlParams($params);
+
         $user = $this->userRepository->findOneBy(['email' => $params->target]);
         if (!$user instanceof User) {
             throw new InvalidParameterException(message: 'User not found');
@@ -107,5 +91,23 @@ class PasswordRecoveryService
             ->eraseCredentials();
 
         $this->em->flush();
+    }
+
+    private function validateUrlParams(TokenUrlParams $params): void
+    {
+        $user = $this->userRepository->findOneBy(['email' => $params->target]);
+        if (!$user instanceof User) {
+            throw new InvalidParameterException(message: 'Invalid target');
+        }
+        if ($this->getTask($user) !== $params->task) {
+            throw new InvalidParameterException(message: 'Invalid task');
+        }
+
+        $this->tokenService->validateUrlParams($params);
+    }
+
+    private function getTask(User $user): string
+    {
+        return self::TASK.'_'.$user->getPasswordChangedAt()?->getTimestamp();
     }
 }
