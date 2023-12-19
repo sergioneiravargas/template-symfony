@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Loggable\Loggable;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -81,13 +82,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
     #[Gedmo\Versioned]
     private ?string $password = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIMETZ_MUTABLE, nullable: true)]
     #[Gedmo\Versioned]
-    private bool $enabled = true;
+    private ?\DateTime $enabledAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIMETZ_MUTABLE, nullable: true)]
     #[Gedmo\Versioned]
-    private bool $verified = false;
+    private ?\DateTime $verifiedAt = null;
+
+    public function __construct()
+    {
+        $this->setEnabled(true);
+    }
 
     public function getId(): ?int
     {
@@ -184,26 +190,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
         $this->plainPassword = null;
     }
 
+    public function getEnabledAt(): ?\DateTime
+    {
+        return $this->enabledAt;
+    }
+
+    public function setEnabledAt(?\DateTime $enabledAt): static
+    {
+        $this->enabledAt = $enabledAt;
+
+        return $this;
+    }
+
     public function isEnabled(): bool
     {
-        return $this->enabled;
+        return (bool) $this->enabledAt;
     }
 
     public function setEnabled(bool $enabled): static
     {
-        $this->enabled = $enabled;
+        if ($enabled && !$this->isEnabled()) {
+            $this->setEnabledAt(new \DateTime());
+        }
+        if (!$enabled && $this->isEnabled()) {
+            $this->setEnabledAt(null);
+        }
+
+        return $this;
+    }
+
+    public function getVerifiedAt(): ?\DateTime
+    {
+        return $this->verifiedAt;
+    }
+
+    public function setVerifiedAt(?\DateTime $verifiedAt): static
+    {
+        $this->verifiedAt = $verifiedAt;
 
         return $this;
     }
 
     public function isVerified(): bool
     {
-        return $this->verified;
+        return (bool) $this->verifiedAt;
     }
 
     public function setVerified(bool $verified): static
     {
-        $this->verified = $verified;
+        if ($verified && !$this->isVerified()) {
+            $this->setVerifiedAt(new \DateTime());
+        }
+        if (!$verified && $this->isVerified()) {
+            $this->setVerifiedAt(null);
+        }
 
         return $this;
     }
