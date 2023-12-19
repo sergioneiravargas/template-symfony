@@ -51,7 +51,7 @@ class PasswordRecoveryService
     {
         return $this->tokenService->generateUrl(
             routeName: $this->routeName,
-            task: self::TASK,
+            task: $this->getTask($user),
             target: $user->getEmail(),
             tokenTtl: $this->tokenTtl,
         );
@@ -60,15 +60,20 @@ class PasswordRecoveryService
     public function validateUrl(string $url): void
     {
         $params = $this->tokenService->getUrlParams($url);
-        if (self::TASK !== $params->task) {
-            throw new InvalidParameterException(message: 'Invalid task');
-        }
         $user = $this->userRepository->findOneBy(['email' => $params->target]);
         if (!$user instanceof User || $params->target !== $user->getEmail()) {
             throw new InvalidParameterException(message: 'Invalid target');
         }
+        if ($this->getTask($user) !== $params->task) {
+            throw new InvalidParameterException(message: 'Invalid task');
+        }
 
         $this->tokenService->validateUrlParams($params);
+    }
+
+    private function getTask(User $user): string
+    {
+        return self::TASK.'_'.$user->getPasswordChangedAt()->getTimestamp();
     }
 
     public function changePassword(

@@ -57,7 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
     private array $roles = [self::ROLE_USER];
 
     /**
-     * @var string The plain password
+     * The plain password.
      */
     #[Assert\NotBlank(
         groups: [
@@ -76,11 +76,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
     private ?string $plainPassword = null;
 
     /**
-     * @var string The hashed password
+     * The hashed password.
      */
     #[ORM\Column]
     #[Gedmo\Versioned]
     private ?string $password = null;
+
+    #[ORM\Column(type: Types::DATETIMETZ_MUTABLE, nullable: true)]
+    #[Gedmo\Versioned]
+    private ?\DateTimeInterface $passwordChangedAt = null;
 
     #[ORM\Column(type: Types::DATETIMETZ_MUTABLE, nullable: true)]
     #[Gedmo\Versioned]
@@ -177,6 +181,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
     public function setPassword(string $password): static
     {
         $this->password = $password;
+        $this->setPasswordChangedAt(new \DateTime());
+
+        return $this;
+    }
+
+    public function getPasswordChangedAt(): ?\DateTimeInterface
+    {
+        return $this->passwordChangedAt;
+    }
+
+    public function setPasswordChangedAt(?\DateTimeInterface $passwordChangedAt): static
+    {
+        $this->passwordChangedAt = $passwordChangedAt;
 
         return $this;
     }
