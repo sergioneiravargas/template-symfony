@@ -60,7 +60,7 @@ class UserEmailVerificationCommand extends Command
             return Command::FAILURE;
         }
 
-        $io->success('User successfully created!');
+        $io->success('User email verification email successfully sent!');
 
         return Command::SUCCESS;
     }

@@ -43,7 +43,7 @@ class EmailVerificationStrategy implements HandlerStrategyInterface
         $message = new Email();
         $message
             ->to($to)
-            ->subject('Email Verification')
+            ->subject('Email verification')
             ->text('Verify your email address')
             ->html(
                 "Enter to the following link to verify your email address: <a href=\"{$verificationUrl}\">link</a>",
