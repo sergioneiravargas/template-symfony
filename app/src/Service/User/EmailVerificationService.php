@@ -11,6 +11,7 @@ use App\Service\Notification\Strategy\EmailVerificationStrategy;
 use App\Service\User\Exception\FailedOperationException;
 use App\Service\User\Exception\InvalidParameterException;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class EmailVerificationService
 {
@@ -20,6 +21,7 @@ class EmailVerificationService
         private EntityManagerInterface $em,
         private NotificationHandler $notificationHandler,
         private TokenService $tokenService,
+        private Security $security,
         private string $routeName, // Nombre de la ruta de verificación
         private int $tokenTtl, // Tiempo de vida del token
     ) {
@@ -53,8 +55,12 @@ class EmailVerificationService
 
     public function validateUrl(
         string $url,
-        User $user,
     ): void {
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw new FailedOperationException(message: 'The action could not be performed by the current user');
+        }
+
         $params = $this->tokenService->getUrlParams($url);
         if (self::TASK !== $params->task) {
             throw new InvalidParameterException(message: 'Invalid task');
