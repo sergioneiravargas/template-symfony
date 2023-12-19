@@ -111,7 +111,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
 
     public function setEmail(string $email): static
     {
-        $this->email = $email;
+        if ($email !== $this->email) {
+            $this->email = $email;
+            $this->setVerified(false);
+        }
 
         return $this;
     }
@@ -180,9 +183,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
 
     public function setPassword(string $password): static
     {
-        $prevPassword = $this->password;
+        $isFirstTimePassword = null === $this->password;
         $this->password = $password;
-        if (null !== $prevPassword) {
+        if (!$isFirstTimePassword) {
             $this->setPasswordChangedAt(new \DateTime());
         }
 
@@ -229,11 +232,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
 
     public function setEnabled(bool $enabled): static
     {
-        if ($enabled && !$this->isEnabled()) {
-            $this->setEnabledAt(new \DateTime());
-        }
-        if (!$enabled && $this->isEnabled()) {
-            $this->setEnabledAt(null);
+        if ($enabled !== $this->isEnabled()) {
+            $this->setEnabledAt($enabled ? new \DateTime() : null);
         }
 
         return $this;
@@ -258,11 +258,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
 
     public function setVerified(bool $verified): static
     {
-        if ($verified && !$this->isVerified()) {
-            $this->setVerifiedAt(new \DateTime());
-        }
-        if (!$verified && $this->isVerified()) {
-            $this->setVerifiedAt(null);
+        if ($verified !== $this->isVerified()) {
+            $this->setVerifiedAt($verified ? new \DateTime() : null);
         }
 
         return $this;

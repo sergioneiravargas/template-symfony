@@ -28,8 +28,7 @@ class UserCrudController extends AbstractCrudController
         yield IdField::new('id')
             ->setDisabled(true);
 
-        yield EmailField::new('email')
-            ->setDisabled(true);
+        yield EmailField::new('email');
 
         yield BooleanField::new('enabled')
             ->renderAsSwitch(false);
