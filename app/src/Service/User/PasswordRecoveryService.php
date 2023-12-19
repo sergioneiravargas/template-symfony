@@ -73,7 +73,7 @@ class PasswordRecoveryService
 
     private function getTask(User $user): string
     {
-        return self::TASK.'_'.$user->getPasswordChangedAt()->getTimestamp();
+        return self::TASK.'_'.$user->getPasswordChangedAt()?->getTimestamp();
     }
 
     public function changePassword(

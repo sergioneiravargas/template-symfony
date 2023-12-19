@@ -180,8 +180,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
 
     public function setPassword(string $password): static
     {
+        $prevPassword = $this->password;
         $this->password = $password;
-        $this->setPasswordChangedAt(new \DateTime());
+        if (null !== $prevPassword) {
+            $this->setPasswordChangedAt(new \DateTime());
+        }
 
         return $this;
     }
