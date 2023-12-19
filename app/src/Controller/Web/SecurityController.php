@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller\Web;
 
+use App\Form\UserPasswordType;
 use App\Service\User\EmailVerificationService;
 use App\Service\User\Exception\PublicException;
+use App\Service\User\PasswordRecoveryService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,23 +46,72 @@ class SecurityController extends AbstractController
         EmailVerificationService $emailVerificationService,
     ): Response {
         $url = $request->getUri();
-        $user = $this->getUser();
-
         try {
             $emailVerificationService->validateUrl($url);
-            $message = 'Your email address has been successfully verified';
             $failed = false;
-        } catch (PublicException $e) {
-            $failed = true;
-            $message = $e->getMessage();
+            $message = 'Your email address has been successfully verified';
         } catch (\Throwable $e) {
             $failed = true;
-            $message = 'An unexpected error occurred while verifying your email address';
+            $message = $e instanceof PublicException
+                ? $e->getMessage()
+                : 'An unexpected error occurred while verifying your email address';
         }
 
-        return $this->render('security/email_verification.html.twig', [
-            'message' => $message,
+        return $this->render('security/task_result.html.twig', [
+            'title' => 'Email verification',
             'failed' => $failed,
+            'message' => $message,
+        ]);
+    }
+
+    #[Route('/password-recovery', name: 'app_web_password_recovery')]
+    #[IsGranted('ROLE_USER')]
+    public function recoverPassword(
+        Request $request,
+        PasswordRecoveryService $passwordRecoveryService,
+    ): Response {
+        $url = $request->getUri();
+        try {
+            $passwordRecoveryService->validateUrl($url);
+            $failed = false;
+        } catch (\Throwable $e) {
+            $failed = true;
+            $message = $e instanceof PublicException
+                ? $e->getMessage()
+                : 'An unexpected error occurred while verifying your email address';
+
+            return $this->render('security/task_result.html.twig', [
+                'title' => 'Password recovery',
+                'failed' => $failed,
+                'message' => $message,
+            ]);
+        }
+
+        $form = $this->createForm(UserPasswordType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $plainPassword = $form->getData()['password'];
+
+            try {
+                $passwordRecoveryService->changePassword($url, $plainPassword);
+                $failed = false;
+                $message = 'Your password has been successfully changed';
+            } catch (\Throwable $e) {
+                $failed = true;
+                $message = $e instanceof PublicException
+                    ? $e->getMessage()
+                    : 'An unexpected error occurred while verifying your email address';
+            }
+
+            return $this->render('security/task_result.html.twig', [
+                'title' => 'Password recovery',
+                'failed' => $failed,
+                'message' => $message,
+            ]);
+        }
+
+        return $this->render('security/password_recovery.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 }

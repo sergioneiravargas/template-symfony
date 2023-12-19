@@ -30,6 +30,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
 
     // VALIDATION GROUPS
     public const GROUP_REGISTRATION = 'USER_REGISTRATION';
+    public const GROUP_PASSWORD_RECOVERY = 'USER_PASSWORD_RECOVERY';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -60,6 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
     #[Assert\NotBlank(
         groups: [
             self::GROUP_REGISTRATION,
+            self::GROUP_PASSWORD_RECOVERY,
         ],
     )]
     #[Assert\Length(
@@ -67,6 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
         max: 24,
         groups: [
             self::GROUP_REGISTRATION,
+            self::GROUP_PASSWORD_RECOVERY,
         ],
     )]
     private ?string $plainPassword = null;

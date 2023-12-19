@@ -39,3 +39,8 @@ services:
         arguments:
             $routeName: '%env(USER_EMAIL_VERIFICATION_ROUTE)%'
             $tokenTtl: '%env(USER_EMAIL_VERIFICATION_TOKEN_TTL)%'
+
+    App\Service\User\PasswordRecoveryService:
+        arguments:
+            $routeName: '%env(USER_PASSWORD_RECOVERY_ROUTE)%'
+            $tokenTtl: '%env(USER_PASSWORD_RECOVERY_TOKEN_TTL)%'
