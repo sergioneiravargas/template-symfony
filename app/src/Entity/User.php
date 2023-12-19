@@ -52,7 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
 
     #[ORM\Column]
     #[Gedmo\Versioned]
-    private array $roles = [];
+    private array $roles = [self::ROLE_USER];
 
     /**
      * @var string The plain password
@@ -118,18 +118,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = self::ROLE_USER;
-
-        return array_unique($roles);
+        return array_unique($this->roles);
     }
 
     public function setRoles(array $roles): static
     {
-        $this->roles = $roles;
+        $roles[] = self::ROLE_USER; // rol predeterminado
+        $roles = array_values($roles);
+
+        $this->roles = array_unique($roles);
 
         return $this;
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return in_array($role, $this->getRoles(), true);
     }
 
     public function getPlainPassword(): ?string
