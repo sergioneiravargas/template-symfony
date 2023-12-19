@@ -42,7 +42,7 @@ class TokenService
             UrlGeneratorInterface::RELATIVE_PATH,
         );
 
-        return $this->baseUrl . '/' . $relativePath;
+        return $this->baseUrl.'/'.$relativePath;
     }
 
     public function getUrlParams(string $url): TokenUrlParams
@@ -148,6 +148,6 @@ class TokenService
         string $secret,
         int $expireTimestamp,
     ): string {
-        return $task . $target . $secret . $expireTimestamp;
+        return $task.$target.$secret.$expireTimestamp;
     }
 }

@@ -29,11 +29,12 @@ class EmailVerificationService
 
     public function sendNotification(User $user): void
     {
+        $email = $user->getEmail();
         $request = new NotificationRequest(
             type: EmailVerificationStrategy::REQUEST_TYPE,
             data: [
-                'to' => $user->getEmail(),
-                'verificationUrl' => $this->generateVerificationUrl($user),
+                'to' => $email,
+                'verificationUrl' => $this->generateVerificationUrl($email),
             ],
         );
 
@@ -43,12 +44,12 @@ class EmailVerificationService
         }
     }
 
-    public function generateVerificationUrl(User $user): string
+    public function generateVerificationUrl(string $email): string
     {
         return $this->tokenService->generateUrl(
             routeName: $this->routeName,
             task: self::TASK,
-            target: $user->getEmail(),
+            target: $email,
             tokenTtl: $this->tokenTtl,
         );
     }

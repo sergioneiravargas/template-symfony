@@ -21,15 +21,22 @@ class EmailVerificationStrategy implements HandlerStrategyInterface
 
     public function canHandle(Request $request): bool
     {
-        return self::REQUEST_TYPE === $request->type
-            && isset($request->data['to'])
-            && is_string($request->data['to'])
-            && isset($request->data['verificationUrl'])
-            && is_string($request->data['verificationUrl']);
+        return self::REQUEST_TYPE === $request->type;
     }
 
     public function notify(Request $request): Result
     {
+        try {
+            $this->validateRequest($request);
+        } catch (\Throwable $e) {
+            return new Result(
+                request: $request,
+                isSuccessful: false,
+                errorMessage: $e->getMessage(),
+                errorTrace: $e->getTraceAsString(),
+            );
+        }
+
         $to = $request->data['to'];
         $verificationUrl = $request->data['verificationUrl'];
 
@@ -57,5 +64,16 @@ class EmailVerificationStrategy implements HandlerStrategyInterface
             request: $request,
             isSuccessful: true,
         );
+    }
+
+    private function validateRequest(Request $request): void
+    {
+        $hasValidData = isset($request->data['to'])
+            && is_string($request->data['to'])
+            && isset($request->data['verificationUrl'])
+            && is_string($request->data['verificationUrl']);
+        if (!$hasValidData) {
+            throw new \InvalidArgumentException('Invalid request data');
+        }
     }
 }
