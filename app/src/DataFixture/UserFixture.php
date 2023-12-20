@@ -15,7 +15,6 @@ class UserFixture extends Fixture
     public const REFERENCE_ADMIN_1 = 'REFERENCE_ADMIN_1';
 
     public const REFERENCE_USER_1 = 'REFERENCE_USER_1';
-    public const REFERENCE_USER_2 = 'REFERENCE_USER_2';
 
     public function __construct(
         private RegistrationService $registrationService,
@@ -36,20 +35,12 @@ class UserFixture extends Fixture
         $this->addReference(self::REFERENCE_ADMIN_1, $admin->object());
 
         // Normal users
-        $user1 = UserFactory::new()
+        $user = UserFactory::new()
             ->withAttributes([
-                'email' => 'user1@email.com',
+                'email' => 'user@email.com',
                 'plainPassword' => $defaultPassword,
             ])
             ->create();
-        $this->addReference(self::REFERENCE_USER_1, $user1->object());
-
-        $user2 = UserFactory::new()
-            ->withAttributes([
-                'email' => 'user2@email.com',
-                'plainPassword' => $defaultPassword,
-            ])
-            ->create();
-        $this->addReference(self::REFERENCE_USER_2, $user2->object());
+        $this->addReference(self::REFERENCE_USER_1, $user->object());
     }
 }
