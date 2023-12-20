@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller\Web;
 
-use App\Form\UserPasswordType;
+use App\Form\PasswordRecoveryFormType;
+use App\Form\RegistrationFormType;
 use App\Service\User\EmailVerificationService;
 use App\Service\User\Exception\PublicException;
 use App\Service\User\PasswordRecoveryService;
+use App\Service\User\RegistrationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,6 +41,42 @@ class SecurityController extends AbstractController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
+    #[Route('/registration', name: 'app_web_registration')]
+    public function register(
+        Request $request,
+        RegistrationService $registrationService,
+    ): Response {
+        $form = $this->createForm(RegistrationFormType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+            $email = $user->getEmail();
+            $plainPassword = $user->getPlainPassword();
+
+            try {
+                $registrationService->register($email, $plainPassword);
+                $failed = false;
+                $message = 'Your user has been successfully registered. Please check your email to verify your email address';
+            } catch (\Throwable $e) {
+                $failed = true;
+                $message = $e instanceof PublicException
+                    ? $e->getMessage()
+                    : 'An unexpected error occurred while registering your user';
+            }
+
+            return $this->render('security/task_feedback.html.twig', [
+                'title' => 'Registration',
+                'failed' => $failed,
+                'message' => $message,
+            ]);
+        }
+
+        return $this->render('security/task_form.html.twig', [
+            'title' => 'Registration',
+            'form' => $form->createView(),
+        ]);
+    }
+
     #[Route('/email-verification', name: 'app_web_email_verification')]
     #[IsGranted('ROLE_USER')]
     public function verifyEmail(
@@ -57,7 +95,7 @@ class SecurityController extends AbstractController
                 : 'An unexpected error occurred while verifying your email address';
         }
 
-        return $this->render('security/task_result.html.twig', [
+        return $this->render('security/task_feedback.html.twig', [
             'title' => 'Email verification',
             'failed' => $failed,
             'message' => $message,
@@ -72,10 +110,11 @@ class SecurityController extends AbstractController
     ): Response {
         $url = $request->getUri();
 
-        $form = $this->createForm(UserPasswordType::class);
+        $form = $this->createForm(PasswordRecoveryFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $form->getData()['password'];
+            $user = $form->getData();
+            $plainPassword = $user->getPlainPassword();
 
             try {
                 $passwordRecoveryService->recoverPassword($url, $plainPassword);
@@ -88,14 +127,15 @@ class SecurityController extends AbstractController
                     : 'An unexpected error occurred while verifying your email address';
             }
 
-            return $this->render('security/task_result.html.twig', [
+            return $this->render('security/task_feedback.html.twig', [
                 'title' => 'Password recovery',
                 'failed' => $failed,
                 'message' => $message,
             ]);
         }
 
-        return $this->render('security/password_recovery.html.twig', [
+        return $this->render('security/task_form.html.twig', [
+            'title' => 'Password recovery',
             'form' => $form->createView(),
         ]);
     }
