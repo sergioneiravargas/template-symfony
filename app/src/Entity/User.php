@@ -111,10 +111,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggabl
 
     public function setEmail(string $email): static
     {
-        if ($email !== $this->email) {
-            $this->email = $email;
-            $this->setVerified(false);
-        }
+        $this->email = $email;
 
         return $this;
     }
