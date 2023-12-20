@@ -4,20 +4,25 @@ ECR_BASE_URL := 000000000000.dkr.ecr.us-east-1.amazonaws.com
 
 .PHONY: up
 up:
-	@docker compose -f docker/docker-compose.yaml --env-file docker/.env up -d --remove-orphans
+	@docker compose -f docker/docker-compose.yaml up -d --remove-orphans
 
 .PHONY: up-dev
 up-dev:
-	@docker compose -f docker/docker-compose.dev.yaml --env-file docker/.env up -d --remove-orphans
+	@docker compose -f docker/docker-compose.dev.yaml up -d --remove-orphans
 
 .PHONY: down
 down:
-	@docker compose -f docker/docker-compose.yaml --env-file docker/.env down
-
+	@docker compose -f docker/docker-compose.yaml down
 
 .PHONY: down-dev
 down-dev:
-	@docker compose -f docker/docker-compose.dev.yaml --env-file docker/.env down
+	@docker compose -f docker/docker-compose.dev.yaml down
+
+.PHONY: restart
+restart:
+	@echo 'service name?' && \
+	read service_name && \
+	docker restart ${PROJECT_NAME}.$${service_name}
 
 .PHONY: build
 build:
@@ -25,7 +30,21 @@ build:
 
 .PHONY: exec
 exec:
-	@docker exec -it ${PROJECT_NAME}.app ash
+	@echo 'service name?' && \
+	read service_name && \
+	docker exec -it ${PROJECT_NAME}.$${service_name} ash
+
+.PHONY: logs
+logs:
+	@echo 'service name?' && \
+	read service_name && \
+	docker logs -f -n 50 ${PROJECT_NAME}.$${service_name}
+
+.PHONY: stats
+stats:
+	@echo 'service name?' && \
+	read service_name && \
+	docker stats ${PROJECT_NAME}.$${service_name}
 
 .PHONY: test
 test:
