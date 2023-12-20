@@ -22,6 +22,10 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'app_web_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        if (null !== $this->getUser()) {
+            return $this->redirectToRoute('app_web_dashboard');
+        }
+
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 
@@ -46,6 +50,10 @@ class SecurityController extends AbstractController
         Request $request,
         RegistrationService $registrationService,
     ): Response {
+        if (null !== $this->getUser()) {
+            return $this->redirectToRoute('app_web_dashboard');
+        }
+
         $form = $this->createForm(RegistrationFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
