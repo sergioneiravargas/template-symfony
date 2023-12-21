@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class DashboardController extends AbstractDashboardController
 {
-    #[Route('', name: 'app_web_admin_dashboard')]
+    #[Route('', name: 'app_web_dashboard_admin')]
     public function index(): Response
     {
         return $this->render('dashboard/admin/index.html.twig');

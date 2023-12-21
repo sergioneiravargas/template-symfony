@@ -20,7 +20,7 @@ class DashboardController extends AbstractController
         }
 
         if ($user->hasRole(User::ROLE_ADMIN)) {
-            return $this->redirectToRoute('app_web_admin_dashboard');
+            return $this->redirectToRoute('app_web_dashboard_admin');
         }
 
         throw $this->createNotFoundException('No dashboard found for this user');
