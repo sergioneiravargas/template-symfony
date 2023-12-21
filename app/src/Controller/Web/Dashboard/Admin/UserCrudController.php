@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Web;
+namespace App\Controller\Web\Dashboard\Admin;
 
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -13,9 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted(User::ROLE_ADMIN)]
 class UserCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
@@ -42,12 +40,9 @@ class UserCrudController extends AbstractCrudController
             throw new \RuntimeException('Invalid user');
         }
 
-        $roles = [];
-        if ($user->hasRole(User::ROLE_ADMIN)) {
-            $roles[User::roleLabel(User::ROLE_ADMIN)] = User::ROLE_ADMIN;
-        }
-
-        $roles = array_unique($roles);
+        $roles = [
+            User::roleLabel(User::ROLE_ADMIN) => User::ROLE_ADMIN,
+        ];
         if (count($roles) > 0) {
             yield ChoiceField::new('roles')
                 ->setChoices($roles)

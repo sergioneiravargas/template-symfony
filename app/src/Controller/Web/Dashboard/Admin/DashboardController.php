@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Web;
+namespace App\Controller\Web\Dashboard\Admin;
 
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -18,10 +18,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class DashboardController extends AbstractDashboardController
 {
-    #[Route('/dashboard', name: 'app_web_dashboard')]
+    #[Route('', name: 'app_web_admin_dashboard')]
     public function index(): Response
     {
-        return $this->render('dashboard/index.html.twig');
+        return $this->render('dashboard/admin/index.html.twig');
     }
 
     public function configureDashboard(): Dashboard
@@ -34,8 +34,7 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-dashboard');
 
-        yield MenuItem::linkToCrud('Users', 'fa fa-users', User::class)
-            ->setPermission(User::ROLE_ADMIN);
+        yield MenuItem::linkToCrud('Users', 'fa fa-users', User::class);
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu

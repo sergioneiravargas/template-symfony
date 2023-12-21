@@ -132,7 +132,7 @@ class SecurityController extends AbstractController
                 $failed = true;
                 $message = $e instanceof PublicException
                     ? $e->getMessage()
-                    : 'An unexpected error occurred while verifying your email address';
+                    : 'An unexpected error occurred while changing your password';
             }
 
             return $this->render('security/task_feedback.html.twig', [
