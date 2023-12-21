@@ -7,7 +7,6 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Loggable\Loggable;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -23,8 +22,10 @@ use Symfony\Component\Validator\Constraints as Assert;
     ],
 )]
 #[Gedmo\Loggable]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, Loggable
+class User implements EntityInterface, UserInterface, PasswordAuthenticatedUserInterface
 {
+    use EntityTrait;
+
     // SECURITY ROLES
     public const ROLE_USER = 'ROLE_USER';
     public const ROLE_ADMIN = 'ROLE_ADMIN';

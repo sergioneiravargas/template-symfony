@@ -33,6 +33,21 @@ services:
         tags:
             - { name: doctrine.event_subscriber, connection: default }
 
+    gedmo.listener.timestampable:
+        class: Gedmo\Timestampable\TimestampableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ '@annotation_reader' ] ]
+
+    gedmo.listener.softdeleteable:
+        class: Gedmo\SoftDeleteable\SoftDeleteableListener
+        tags:
+            - { name: doctrine.event_listener, event: 'onFlush' }
+            - { name: doctrine.event_listener, event: 'loadClassMetadata' }
+        calls:
+            - [ setAnnotationReader, [ '@annotation_reader' ] ]
+
     App\Service\User\TokenService:
         arguments:
             $baseUrl: '%env(APP_BASE_URL)%'
