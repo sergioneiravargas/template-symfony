@@ -13,7 +13,6 @@ use Doctrine\Persistence\ObjectManager;
 class UserFixture extends Fixture
 {
     public const REFERENCE_ADMIN_1 = 'REFERENCE_ADMIN_1';
-
     public const REFERENCE_USER_1 = 'REFERENCE_USER_1';
 
     public function __construct(
