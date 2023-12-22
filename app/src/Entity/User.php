@@ -132,7 +132,7 @@ class User implements EntityInterface, UserInterface, PasswordAuthenticatedUserI
      */
     public function getRoles(): array
     {
-        return array_unique($this->roles);
+        return $this->roles;
     }
 
     public function setRoles(array $roles): static
