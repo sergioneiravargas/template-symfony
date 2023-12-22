@@ -16,7 +16,7 @@ class PasswordRecoveryFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('password', PasswordType::class, [
+            ->add('plainPassword', PasswordType::class, [
                 'label' => 'New password',
             ])
             ->add('submit', SubmitType::class, [

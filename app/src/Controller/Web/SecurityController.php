@@ -112,7 +112,6 @@ class SecurityController extends AbstractController
     }
 
     #[Route('/password-recovery', name: 'app_web_password_recovery')]
-    #[IsGranted('ROLE_USER')]
     public function recoverPassword(
         Request $request,
         PasswordRecoveryService $passwordRecoveryService,
