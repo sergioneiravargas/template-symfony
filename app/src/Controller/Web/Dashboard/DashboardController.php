@@ -16,7 +16,7 @@ class DashboardController extends AbstractController
     {
         $user = $this->getUser();
         if (!$user instanceof User) {
-            throw new \LogicException('Invalid user');
+            throw new \Exception('Invalid user');
         }
 
         if ($user->hasRole(User::ROLE_ADMIN)) {

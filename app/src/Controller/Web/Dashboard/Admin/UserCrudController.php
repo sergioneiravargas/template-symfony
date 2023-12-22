@@ -43,13 +43,13 @@ class UserCrudController extends AbstractCrudController
         $roles = [
             User::roleLabel(User::ROLE_ADMIN) => User::ROLE_ADMIN,
         ];
-        if (count($roles) > 0) {
-            yield ChoiceField::new('roles')
-                ->setChoices($roles)
-                ->setFormType(ChoiceType::class)
-                ->allowMultipleChoices(true)
-                ->setRequired(false);
-        }
+        yield ChoiceField::new('roles')
+            ->setChoices($roles)
+            ->setFormType(ChoiceType::class)
+            ->allowMultipleChoices(true)
+            ->setRequired(false)
+            ->renderExpanded()
+            ->renderAsBadges();
     }
 
     public function configureActions(Actions $actions): Actions
