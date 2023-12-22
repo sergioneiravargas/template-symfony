@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractController
 {
-    #[Route('/', name: 'app_web_dashboard')]
+    #[Route('', name: 'app_web_dashboard')]
     public function index(): Response
     {
         $user = $this->getUser();
