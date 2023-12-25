@@ -37,9 +37,10 @@ class EmailVerificationService
             ],
         );
 
-        $result = $this->notificationHandler->handleNotification($request);
-        if (!$result->isSuccessful) {
-            throw new FailedOperationException(message: 'Notification could not be sent');
+        foreach ($this->notificationHandler->handleNotification($request) as $result) {
+            if (!$result->isSuccessful) {
+                throw new FailedOperationException(message: 'Notification could not be sent');
+            }
         }
     }
 

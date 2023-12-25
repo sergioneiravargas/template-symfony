@@ -7,27 +7,29 @@ namespace App\Service\Notification;
 class Handler
 {
     /**
-     * @var HandlerStrategyInterface[]
+     * @var StrategyInterface[]
      */
-    private $strategies = [];
+    private array $strategies = [];
 
-    public function addStrategy(HandlerStrategyInterface $strategy)
+    public function addStrategy(StrategyInterface $strategy): void
     {
         $this->strategies[] = $strategy;
     }
 
-    public function handleNotification(Request $request): Result
+    /**
+     * @return Result[]
+     */
+    public function handleNotification(Request $request): array
     {
+        $results = [];
         foreach ($this->strategies as $strategy) {
-            if ($strategy->canHandle($request)) {
-                return $strategy->notify($request);
+            if (!$strategy->shouldNotify($request)) {
+                continue;
             }
+
+            $results[] = $strategy->notify($request);
         }
 
-        return new Result(
-            request: $request,
-            isSuccessful: false,
-            errorMessage: 'No strategy found for this request.',
-        );
+        return $results;
     }
 }

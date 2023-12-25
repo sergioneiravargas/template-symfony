@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Notification;
 
-interface HandlerStrategyInterface
+interface StrategyInterface
 {
-    public function canHandle(Request $request): bool;
+    public function shouldNotify(Request $request): bool;
 
     public function notify(Request $request): Result;
 }

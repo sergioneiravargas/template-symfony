@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service\Notification\Strategy;
 
-use App\Service\Notification\HandlerStrategyInterface;
 use App\Service\Notification\Request;
 use App\Service\Notification\Result;
+use App\Service\Notification\StrategyInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-class PasswordRecoveryStrategy implements HandlerStrategyInterface
+class PasswordRecoveryStrategy implements StrategyInterface
 {
     public const REQUEST_TYPE = 'PASSWORD_RECOVERY';
 
@@ -19,21 +19,18 @@ class PasswordRecoveryStrategy implements HandlerStrategyInterface
     ) {
     }
 
-    public function canHandle(Request $request): bool
+    public function shouldNotify(Request $request): bool
     {
         return self::REQUEST_TYPE === $request->type;
     }
 
     public function notify(Request $request): Result
     {
-        try {
-            $this->validateRequest($request);
-        } catch (\Throwable $e) {
+        if (!$this->requestIsValid($request)) {
             return new Result(
                 request: $request,
                 isSuccessful: false,
-                errorMessage: $e->getMessage(),
-                errorTrace: $e->getTraceAsString(),
+                errorMessage: 'Invalid request',
             );
         }
 
@@ -66,14 +63,11 @@ class PasswordRecoveryStrategy implements HandlerStrategyInterface
         );
     }
 
-    private function validateRequest(Request $request): void
+    private function requestIsValid(Request $request): bool
     {
-        $hasValidData = isset($request->data['to'])
+        return isset($request->data['to'])
             && is_string($request->data['to'])
             && isset($request->data['recoveryUrl'])
             && is_string($request->data['recoveryUrl']);
-        if (!$hasValidData) {
-            throw new \InvalidArgumentException('Invalid request data');
-        }
     }
 }
