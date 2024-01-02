@@ -9,9 +9,9 @@ use App\Repository\UserRepository;
 use App\Service\Notification\Handler as NotificationHandler;
 use App\Service\Notification\Request as NotificationRequest;
 use App\Service\Notification\Strategy\EmailVerificationStrategy;
-use App\Service\User\Exception\FailedOperationException;
 use App\Service\User\Exception\InvalidParameterException;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class EmailVerificationService
 {
@@ -22,6 +22,7 @@ class EmailVerificationService
         private NotificationHandler $notificationHandler,
         private TokenService $tokenService,
         private UserRepository $userRepository,
+        private LoggerInterface $logger,
         private string $routeName, // Nombre de la ruta de verificación
         private int $tokenTtl, // Tiempo de vida del token
     ) {
@@ -37,10 +38,13 @@ class EmailVerificationService
             ],
         );
 
-        foreach ($this->notificationHandler->handleNotification($request) as $result) {
-            if (!$result->isSuccessful) {
-                throw new FailedOperationException(message: 'Notification could not be sent');
-            }
+        try {
+            $this->notificationHandler->handleNotification($request);
+        } catch (\Throwable $th) {
+            $this->logger->error('Notification failed', [
+                'message' => $th->getMessage(),
+                'trace' => $th->getTraceAsString(),
+            ]);
         }
     }
 

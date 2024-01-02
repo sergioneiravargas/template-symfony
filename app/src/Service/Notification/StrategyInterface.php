@@ -8,5 +8,5 @@ interface StrategyInterface
 {
     public function shouldNotify(Request $request): bool;
 
-    public function notify(Request $request): Result;
+    public function notify(Request $request): void;
 }

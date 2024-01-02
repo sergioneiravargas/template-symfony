@@ -19,17 +19,14 @@ class Handler
     /**
      * @return Result[]
      */
-    public function handleNotification(Request $request): array
+    public function handleNotification(Request $request): void
     {
-        $results = [];
         foreach ($this->strategies as $strategy) {
             if (!$strategy->shouldNotify($request)) {
                 continue;
             }
 
-            $results[] = $strategy->notify($request);
+            $strategy->notify($request);
         }
-
-        return $results;
     }
 }

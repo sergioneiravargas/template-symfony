@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Notification\Strategy;
 
+use App\Service\Notification\Exception\FailedNotification;
+use App\Service\Notification\Exception\InvalidRequest;
 use App\Service\Notification\Request;
-use App\Service\Notification\Result;
 use App\Service\Notification\StrategyInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -24,14 +25,10 @@ class EmailVerificationStrategy implements StrategyInterface
         return self::REQUEST_TYPE === $request->type;
     }
 
-    public function notify(Request $request): Result
+    public function notify(Request $request): void
     {
         if (!$this->requestIsValid($request)) {
-            return new Result(
-                request: $request,
-                isSuccessful: false,
-                errorMessage: 'Invalid request',
-            );
+            throw new InvalidRequest();
         }
 
         $to = $request->data['to'];
@@ -48,19 +45,9 @@ class EmailVerificationStrategy implements StrategyInterface
 
         try {
             $this->mailer->send($message);
-        } catch (\Throwable $e) {
-            return new Result(
-                request: $request,
-                isSuccessful: false,
-                errorMessage: $e->getMessage(),
-                errorTrace: $e->getTraceAsString(),
-            );
+        } catch (\Throwable $th) {
+            throw new FailedNotification(message: $th->getMessage(), code: $th->getCode(), previous: $th);
         }
-
-        return new Result(
-            request: $request,
-            isSuccessful: true,
-        );
     }
 
     private function requestIsValid(Request $request): bool
