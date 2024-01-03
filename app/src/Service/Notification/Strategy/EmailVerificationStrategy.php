@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service\Notification\Strategy;
 
-use App\Service\Notification\Exception\FailedNotification;
-use App\Service\Notification\Exception\InvalidRequest;
+use App\Service\Notification\Strategy\Exception\FailedNotification;
+use App\Service\Notification\Strategy\Exception\InvalidRequest;
 use App\Service\Notification\Request;
 use App\Service\Notification\StrategyInterface;
 use Symfony\Component\Mailer\MailerInterface;

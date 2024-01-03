@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Notification\Exception;
+namespace App\Service\Notification\Strategy\Exception;
 
 class FailedNotification extends \Exception
 {
