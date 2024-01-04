@@ -13,7 +13,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_ADMIN')]
 class UserCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
