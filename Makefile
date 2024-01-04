@@ -73,40 +73,40 @@ ecrlogin:
 
 .PHONY: docker-build-app
 docker-build-app:
-	@echo "Ingresa tag de la imágen Docker (app/app-worker):" && \
+	@echo "image tag?" && \
 	read DOCKER_IMAGE_TAG && \
 	docker build  docker/app -t ${ECR_BASE_URL}/${PROJECT_NAME}-app:$${DOCKER_IMAGE_TAG} && \
 	docker build  docker/app-worker -t ${ECR_BASE_URL}/${PROJECT_NAME}-app-worker:$${DOCKER_IMAGE_TAG}
 
 .PHONY: docker-pull-app
 docker-pull-app:
-	@echo "Ingresa tag de la imágen Docker (app/app-worker):" && \
+	@echo "image tag?" && \
 	read DOCKER_IMAGE_TAG && \
 	docker pull ${ECR_BASE_URL}/${PROJECT_NAME}-app:$${DOCKER_IMAGE_TAG} && \
 	docker pull ${ECR_BASE_URL}/${PROJECT_NAME}-app-worker:$${DOCKER_IMAGE_TAG}
 
 .PHONY: docker-push-app
 docker-push-app:
-	@echo "Ingresa tag de la imágen Docker (app/app-worker):" && \
+	@echo "image tag?" && \
 	read DOCKER_IMAGE_TAG && \
 	docker push ${ECR_BASE_URL}/${PROJECT_NAME}-app:$${DOCKER_IMAGE_TAG} && \
 	docker push ${ECR_BASE_URL}/${PROJECT_NAME}-app-worker:$${DOCKER_IMAGE_TAG}
 
 .PHONY: docker-build-nginx
 docker-build-nginx:
-	@echo "Ingresa tag de la imágen Docker (nginx):" && \
+	@echo "image tag?" && \
 	read DOCKER_IMAGE_TAG && \
 	docker build  docker/nginx -t ${ECR_BASE_URL}/${PROJECT_NAME}-nginx:$${DOCKER_IMAGE_TAG}
 
 .PHONY: docker-pull-nginx
 docker-pull-nginx:
-	@echo "Ingresa tag de la imágen Docker (nginx):" && \
+	@echo "image tag?" && \
 	read DOCKER_IMAGE_TAG && \
 	docker pull ${ECR_BASE_URL}/${PROJECT_NAME}-app:$${DOCKER_IMAGE_TAG}
 
 .PHONY: docker-push-nginx
 docker-push-nginx:
-	@echo "Ingresa tag de la imágen Docker (nginx):" && \
+	@echo "image tag?" && \
 	read DOCKER_IMAGE_TAG && \
 	docker push ${ECR_BASE_URL}/${PROJECT_NAME}-app:$${DOCKER_IMAGE_TAG}
 
