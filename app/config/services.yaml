@@ -15,7 +15,7 @@ services:
             Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface: '@App\Security\AuthenticationFailureHandler'
 
     _instanceof:
-        App\Service\Notification\StrategyInterface:
+        App\Framework\Notification\StrategyInterface:
             tags: ['app.notification.handler_strategy']
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

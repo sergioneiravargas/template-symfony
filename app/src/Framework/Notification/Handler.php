@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Notification;
+namespace App\Framework\Notification;
 
 class Handler
 {

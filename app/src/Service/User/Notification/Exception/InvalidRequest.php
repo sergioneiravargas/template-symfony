@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Notification\Strategy\Exception;
+namespace App\Service\User\Notification\Exception;
 
 class InvalidRequest extends \Exception
 {

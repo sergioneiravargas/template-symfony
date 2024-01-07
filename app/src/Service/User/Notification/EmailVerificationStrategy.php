@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Notification\Strategy;
+namespace App\Service\User\Notification;
 
-use App\Service\Notification\Strategy\Exception\FailedNotification;
-use App\Service\Notification\Strategy\Exception\InvalidRequest;
-use App\Service\Notification\Request;
-use App\Service\Notification\StrategyInterface;
+use App\Framework\Notification\Request;
+use App\Framework\Notification\StrategyInterface;
+use App\Service\User\Notification\Exception\FailedNotification;
+use App\Service\User\Notification\Exception\InvalidRequest;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 

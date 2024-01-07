@@ -6,9 +6,9 @@ namespace App\Service\User;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Service\Notification\Handler as NotificationHandler;
-use App\Service\Notification\Request as NotificationRequest;
-use App\Service\Notification\Strategy\PasswordRecoveryStrategy;
+use App\Framework\Notification\Handler as NotificationHandler;
+use App\Framework\Notification\Request as NotificationRequest;
+use App\Service\User\Notification\PasswordRecoveryStrategy;
 use App\Service\User\Exception\InvalidParameterException;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -113,6 +113,6 @@ class PasswordRecoveryService
 
     private function getTask(User $user): string
     {
-        return self::TASK.'_'.$user->getPasswordChangedAt()?->getTimestamp();
+        return self::TASK . '_' . $user->getPasswordChangedAt()?->getTimestamp();
     }
 }
