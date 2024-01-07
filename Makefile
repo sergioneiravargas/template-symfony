@@ -1,3 +1,4 @@
+# VARIABLES
 PROJECT_NAME := template-symfony
 DOMAIN_BASE_URL := template-symfony.com
 ECR_BASE_URL := 000000000000.dkr.ecr.us-east-1.amazonaws.com
