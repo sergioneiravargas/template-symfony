@@ -6,7 +6,6 @@ namespace App\DataFixture;
 
 use App\DataFixture\Factory\UserFactory;
 use App\Entity\User;
-use App\Service\User\RegistrationService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -14,11 +13,6 @@ class UserFixture extends Fixture
 {
     public const REFERENCE_ADMIN_1 = 'REFERENCE_ADMIN_1';
     public const REFERENCE_USER_1 = 'REFERENCE_USER_1';
-
-    public function __construct(
-        private RegistrationService $registrationService,
-    ) {
-    }
 
     public function load(ObjectManager $manager): void
     {
