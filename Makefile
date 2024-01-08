@@ -75,7 +75,7 @@ down-dev:
 
 .PHONY: restart
 restart:
-	@echo 'service name?' && \
+	@echo 'service name:' && \
 	read service_name && \
 	docker restart ${PROJECT_NAME}.$${service_name}
 
@@ -85,19 +85,19 @@ build:
 
 .PHONY: exec
 exec:
-	@echo 'service name?' && \
+	@echo 'service name:' && \
 	read service_name && \
 	docker exec -it ${PROJECT_NAME}.$${service_name} ash
 
 .PHONY: logs
 logs:
-	@echo 'service name?' && \
+	@echo 'service name:' && \
 	read service_name && \
 	docker logs -f -n 50 ${PROJECT_NAME}.$${service_name}
 
 .PHONY: stats
 stats:
-	@echo 'service name?' && \
+	@echo 'service name:' && \
 	read service_name && \
 	docker stats ${PROJECT_NAME}.$${service_name}
 
@@ -131,42 +131,42 @@ ecrlogin:
 
 .PHONY: docker-build-app
 docker-build-app:
-	@echo "image tag?" && \
-	read DOCKER_IMAGE_TAG && \
-	docker build  docker/app -t ${ECR_BASE_URL}/${PROJECT_NAME}-app:$${DOCKER_IMAGE_TAG} && \
-	docker build  docker/app-worker -t ${ECR_BASE_URL}/${PROJECT_NAME}-app-worker:$${DOCKER_IMAGE_TAG}
+	@echo 'image tag:' && \
+	read docker_image_tag && \
+	docker build  docker/app -t ${ECR_BASE_URL}/${PROJECT_NAME}-app:$${docker_image_tag} && \
+	docker build  docker/app-worker -t ${ECR_BASE_URL}/${PROJECT_NAME}-app-worker:$${docker_image_tag}
 
 .PHONY: docker-pull-app
 docker-pull-app:
-	@echo "image tag?" && \
-	read DOCKER_IMAGE_TAG && \
-	docker pull ${ECR_BASE_URL}/${PROJECT_NAME}-app:$${DOCKER_IMAGE_TAG} && \
-	docker pull ${ECR_BASE_URL}/${PROJECT_NAME}-app-worker:$${DOCKER_IMAGE_TAG}
+	@echo 'image tag:' && \
+	read docker_image_tag && \
+	docker pull ${ECR_BASE_URL}/${PROJECT_NAME}-app:$${docker_image_tag} && \
+	docker pull ${ECR_BASE_URL}/${PROJECT_NAME}-app-worker:$${docker_image_tag}
 
 .PHONY: docker-push-app
 docker-push-app:
-	@echo "image tag?" && \
-	read DOCKER_IMAGE_TAG && \
-	docker push ${ECR_BASE_URL}/${PROJECT_NAME}-app:$${DOCKER_IMAGE_TAG} && \
-	docker push ${ECR_BASE_URL}/${PROJECT_NAME}-app-worker:$${DOCKER_IMAGE_TAG}
+	@echo 'image tag:' && \
+	read docker_image_tag && \
+	docker push ${ECR_BASE_URL}/${PROJECT_NAME}-app:$${docker_image_tag} && \
+	docker push ${ECR_BASE_URL}/${PROJECT_NAME}-app-worker:$${docker_image_tag}
 
 .PHONY: docker-build-nginx
 docker-build-nginx:
-	@echo "image tag?" && \
-	read DOCKER_IMAGE_TAG && \
-	docker build  docker/nginx -t ${ECR_BASE_URL}/${PROJECT_NAME}-nginx:$${DOCKER_IMAGE_TAG}
+	@echo 'image tag:' && \
+	read docker_image_tag && \
+	docker build  docker/nginx -t ${ECR_BASE_URL}/${PROJECT_NAME}-nginx:$${docker_image_tag}
 
 .PHONY: docker-pull-nginx
 docker-pull-nginx:
-	@echo "image tag?" && \
-	read DOCKER_IMAGE_TAG && \
-	docker pull ${ECR_BASE_URL}/${PROJECT_NAME}-app:$${DOCKER_IMAGE_TAG}
+	@echo 'image tag:' && \
+	read docker_image_tag && \
+	docker pull ${ECR_BASE_URL}/${PROJECT_NAME}-app:$${docker_image_tag}
 
 .PHONY: docker-push-nginx
 docker-push-nginx:
-	@echo "image tag?" && \
-	read DOCKER_IMAGE_TAG && \
-	docker push ${ECR_BASE_URL}/${PROJECT_NAME}-app:$${DOCKER_IMAGE_TAG}
+	@echo 'image tag:' && \
+	read docker_image_tag && \
+	docker push ${ECR_BASE_URL}/${PROJECT_NAME}-app:$${docker_image_tag}
 
 # DEPLOY
 .PHONY: deploy
