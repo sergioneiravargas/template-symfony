@@ -83,6 +83,10 @@ restart:
 build:
 	@docker compose -f docker/docker-compose.yaml --env-file docker/.env build --no-cache
 
+.PHONY: build-dev
+build-dev:
+	@docker compose -f docker/docker-compose.dev.yaml --env-file docker/.env build --no-cache
+
 .PHONY: exec
 exec:
 	@echo 'service name:' && \
