@@ -8,16 +8,16 @@ RUN apk add --update \
 RUN docker-php-ext-install opcache \
     && docker-php-ext-enable opcache
 
+# mbstring
+RUN apk add --update oniguruma-dev \
+    && docker-php-ext-install mbstring \
+    && docker-php-ext-enable mbstring
+
 # intl
 RUN apk add --update icu-dev \
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl \
     && docker-php-ext-enable intl
-
-# mbstring
-RUN apk add --update oniguruma-dev \
-    && docker-php-ext-install mbstring \
-    && docker-php-ext-enable mbstring
 
 # xsl
 RUN apk add --update libxslt-dev \
@@ -38,8 +38,6 @@ ENV PATH=$PATH:/root/composer/vendor/bin COMPOSER_ALLOW_SUPERUSER=1
 # supervisor
 RUN apk add --update supervisor \
     && mkdir -p /var/log/supervisor
-
-VOLUME ["/sys/fs/cgroup"]
 
 WORKDIR /var/www/app
 

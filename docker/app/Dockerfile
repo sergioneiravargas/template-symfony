@@ -8,16 +8,16 @@ RUN apk add --update \
 RUN docker-php-ext-install opcache \
     && docker-php-ext-enable opcache
 
+# mbstring
+RUN apk add --update oniguruma-dev \
+    && docker-php-ext-install mbstring \
+    && docker-php-ext-enable mbstring
+
 # intl
 RUN apk add --update icu-dev \
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl \
     && docker-php-ext-enable intl
-
-# mbstring
-RUN apk add --update oniguruma-dev \
-    && docker-php-ext-install mbstring \
-    && docker-php-ext-enable mbstring
 
 # xsl
 RUN apk add --update libxslt-dev \
@@ -34,8 +34,6 @@ RUN apk add --update libpq postgresql-dev \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     ln -s $(composer config --global home) /root/composer
 ENV PATH=$PATH:/root/composer/vendor/bin COMPOSER_ALLOW_SUPERUSER=1
-
-VOLUME ["/sys/fs/cgroup"]
 
 WORKDIR /var/www/app
 
